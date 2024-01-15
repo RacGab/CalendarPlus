@@ -1,27 +1,45 @@
 body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-family: 'Roboto', sans-serif;
     background-color: #f5f5f5;
 }
 
 #calendar {
     display: flex;
     flex-wrap: wrap;
-    width: 60%; /* Reduced width */
+    width: 100%; /* Make the calendar take up 90% of the screen width on small screens */
     margin: auto;
     margin-top: 50px;
     border: 1px solid #ddd;
     box-shadow: 0px 0px 10px #ddd;
     background-color: #fff;
+    padding: 20px;
+}
+
+@media (min-width: 600px) {
+    /* On screens that are 600px or wider, the calendar will take up 60% of the screen width */
+    #calendar {
+        width: 60%;
+    }
 }
 
 #calendar div {
-    width: 14.28%; /* 100% / 7 days */
+    width: 14.28%;
     border: 1px solid #ddd;
     box-sizing: border-box;
     text-align: center;
-    padding: 20px 0;
+    padding: 30px 0;
     color: #666;
+    font-size: 0.8em; /* Make the text smaller on small screens */
 }
+
+@media (min-width: 600px) {
+    /* On screens that are 600px or wider, the text will be larger */
+    #calendar div {
+        font-size: 1em;
+    }
+}
+
+/* Rest of your CSS... */
 
 #calendar div:hover {
     background-color: #f5f5f5;
@@ -39,21 +57,31 @@ body {
     color: #333;
 }
 
-#calendar .today {
-    background-color: #0078d7;
+#calendar .today, #calendar .event, #calendar-controls button {
+    background-color: #007BFF; /* Softer blue */
     color: #fff;
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
 }
 
 #calendar .event {
-    background-color: #0078d7;
-    color: #fff;
     margin-top: 5px;
-    padding: 5px;
-    border-radius: 5px;
-    font-size: 0.8em;
-    width: 100%; /* Adjust as needed */
-    height: auto; /* Adjust as needed */
-    word-wrap: break-word; /* This will break the text into multiple lines if it's too long */
+    padding: 15px; /* Increased padding */
+    border-radius: 10px;
+    font-size: 0.9em;
+    width: 100%;
+    height: auto;
+    word-wrap: break-word;
+}
+
+#calendar div:hover {
+    background-color: #e0e0e0; /* Lighter shade of gray */
+    color: #333; /* Darker text color */
+    cursor: pointer;
+}
+
+#calendar .event:hover {
+    background-color: #1666f2; /* Lighter shade of blue */
+    color: #fff; /* White text color */
 }
 
 #calendar-controls {
@@ -66,14 +94,17 @@ body {
 }
 
 #calendar-controls button {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background-color: #0078d7;
-    color: #fff;
+    font-family: 'Roboto', sans-serif;
     border: none;
     padding: 10px 20px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    transition-duration: 0.4s;
     cursor: pointer;
-    transition: background-color 0.3s ease;
-    position: relative;
+    border-radius: 12px;
 }
 
 #calendar-controls button:before {
@@ -96,12 +127,4 @@ body {
     border-top: 20px solid transparent;
     border-bottom: 20px solid transparent;
     border-left: 20px solid #0078d7;
-}
-
-#calendar-controls button:hover {
-    background-color: #005a9e;
-}
-
-#calendar-controls button:hover:before {
-    border-color: transparent transparent transparent #005a9e;
 }
