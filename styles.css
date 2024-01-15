@@ -1,0 +1,107 @@
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f5f5f5;
+}
+
+#calendar {
+    display: flex;
+    flex-wrap: wrap;
+    width: 60%; /* Reduced width */
+    margin: auto;
+    margin-top: 50px;
+    border: 1px solid #ddd;
+    box-shadow: 0px 0px 10px #ddd;
+    background-color: #fff;
+}
+
+#calendar div {
+    width: 14.28%; /* 100% / 7 days */
+    border: 1px solid #ddd;
+    box-sizing: border-box;
+    text-align: center;
+    padding: 20px 0;
+    color: #666;
+}
+
+#calendar div:hover {
+    background-color: #f5f5f5;
+    cursor: pointer;
+}
+
+#calendar .month-year {
+    width: 100%;
+    font-size: 1.5em;
+    color: #333;
+}
+
+#calendar .day-name {
+    font-weight: bold;
+    color: #333;
+}
+
+#calendar .today {
+    background-color: #0078d7;
+    color: #fff;
+}
+
+#calendar .event {
+    background-color: #0078d7;
+    color: #fff;
+    margin-top: 5px;
+    padding: 5px;
+    border-radius: 5px;
+    font-size: 0.8em;
+    width: 100%; /* Adjust as needed */
+    height: auto; /* Adjust as needed */
+    word-wrap: break-word; /* This will break the text into multiple lines if it's too long */
+}
+
+#calendar-controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 60%;
+    margin: auto;
+    padding: 20px 0;
+}
+
+#calendar-controls button {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #0078d7;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    position: relative;
+}
+
+#calendar-controls button:before {
+    content: '';
+    position: absolute;
+    top: 0;
+    width: 0;
+    height: 0;
+}
+
+#prev-month:before {
+    left: -20px;
+    border-top: 20px solid transparent;
+    border-bottom: 20px solid transparent;
+    border-right: 20px solid #0078d7;
+}
+
+#next-month:before {
+    right: -20px;
+    border-top: 20px solid transparent;
+    border-bottom: 20px solid transparent;
+    border-left: 20px solid #0078d7;
+}
+
+#calendar-controls button:hover {
+    background-color: #005a9e;
+}
+
+#calendar-controls button:hover:before {
+    border-color: transparent transparent transparent #005a9e;
+}
