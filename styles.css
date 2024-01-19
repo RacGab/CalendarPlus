@@ -33,13 +33,11 @@ body {
 }
 
 #calendar-container {
-    position: relative;
     display: inline-block;
     width: 100%;
 }
 
 #calendar {
-    position: relative;
     display: flex;
     flex-wrap: wrap;
     width: 50%;
@@ -51,10 +49,6 @@ body {
     padding: 20px;
 }
 
-#calendar td, #calendar th {
-    /* ...other styles... */
-    height: 50px; /* Adjust this value to your desired height */
-}
 
 #calendar div {
     width: 14.28%;
