@@ -1,147 +1,110 @@
-// Get the calendar element
 const calendar = document.getElementById('calendar');
+const dialog = document.getElementById('dialog');
+const [editButton, deleteButton, cancelButton] = ['edit-button', 'delete-button', 'cancel-button'].map(id => document.getElementById(id));
+let date = new Date();
+const monthNames = ["Janvier", "Février", "Mars", "Avril", "Mai", "Juin", "Juillet", "Août", "Septembre", "Octobre", "Novembre", "Décembre"];
+const dayNames = ["Dimanche", "Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi", "Samedi"];
+['prev-month', 'next-month'].forEach((id, i) => document.getElementById(id).addEventListener('click', () => changeMonth(i * 2 - 1)));
 
-// Get the current date
-const date = new Date();
-
-// Set the year to 2024
-date.setFullYear(2024);
-
-// Month names array
-const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-
-// Day names array
-const dayNames = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
-
-// Get the control buttons
-const prevMonthButton = document.getElementById('prev-month');
-const nextMonthButton = document.getElementById('next-month');
-
-// Add event listeners to the buttons
-prevMonthButton.addEventListener('click', () => changeMonth(-1));
-nextMonthButton.addEventListener('click', () => changeMonth(1));
-
-// Function to change the current month
 function changeMonth(direction) {
-    // Change the month
-    date.setMonth(date.getMonth() + direction);
-
-    // Clear the calendar
+    const year = date.getFullYear();
+    const month = date.getMonth() + direction;
+    date = new Date(year, month, 1);
     calendar.innerHTML = '';
-
-    // Rebuild the calendar
     buildCalendar();
 }
 
-// Function to create an event
 function createEvent(day, dayKey, eventText) {
     const eventDiv = document.createElement('div');
     eventDiv.textContent = eventText;
     eventDiv.className = 'event';
     day.appendChild(eventDiv);
-
-    // Add an event listener to the event div
-    eventDiv.addEventListener('click', function(e) {
-        // Prompt the user to confirm the deletion
-        const confirmDelete = window.confirm('Do you want to delete this event?');
-
-        // If the user confirmed, delete the event
-        if (confirmDelete) {
-            // Remove the event from the DOM
-            e.target.remove();
-
-            // Remove the event from localStorage
-            const savedEvents = JSON.parse(localStorage.getItem(dayKey) || '[]');
-            const index = savedEvents.indexOf(eventText);
-            if (index !== -1) {
-                savedEvents.splice(index, 1);
-                if (savedEvents.length === 0) {
-                    // If there are no more events for the day, remove the key from localStorage
-                    localStorage.removeItem(dayKey);
-                } else {
-                    // Otherwise, save the updated array back to localStorage
-                    localStorage.setItem(dayKey, JSON.stringify(savedEvents));
-                }
-            }
-        }
-
-        // Prevent the click event from bubbling up to the day div
-        e.stopPropagation();
-    });
+    eventDiv.addEventListener('click', e => showDialog(e, dayKey, eventText));
 }
 
-// Function to build the calendar
-function buildCalendar() {
-    // Get the current month and year
-    const month = date.getMonth();
-    const year = date.getFullYear();
+function showDialog(e, dayKey, eventText) {
+    dialog.style.display = 'block';
+    const actions = [editEvent, deleteEvent, cancelDialog];
+    [editButton, deleteButton, cancelButton].forEach((btn, i) => btn.addEventListener('click', actions[i]));
 
-    // Get today's date
-    const today = new Date();
-
-    // Add month and year to the calendar
-    const monthYear = document.createElement('div');
-    monthYear.textContent = `${monthNames[month]} ${year}`;
-    monthYear.className = 'month-year';
-    calendar.appendChild(monthYear);
-
-    // Create a new Date object for the first day of the current month
-    const firstDay = new Date(year, month, 1);
-
-    // Get the day of the week for the first day of the month
-    const startingDayOfWeek = firstDay.getDay();
-
-    // Adjust the day names array to start with the correct day of the week
-    const adjustedDayNames = dayNames.slice(startingDayOfWeek).concat(dayNames.slice(0, startingDayOfWeek));
-
-    // Add adjusted day names to the calendar
-    for (let i = 0; i < adjustedDayNames.length; i++) {
-        const dayName = document.createElement('div');
-        dayName.textContent = adjustedDayNames[i];
-        dayName.className = 'day-name';
-        calendar.appendChild(dayName);
+    function editEvent() {
+        const newEventText = window.prompt('Enter the new event text:');
+        if (newEventText) {
+            e.target.textContent = newEventText;
+            updateLocalStorage(dayKey, eventText, newEventText);
+        }
+        hideDialog();
     }
 
-    // Create a new Date object for the last day of the current month
-    const lastDay = new Date(year, month + 1, 0);
-
-    // Loop through each day of the month
-    for (let i = firstDay.getDate(); i <= lastDay.getDate(); i++) {
-        // Create a new div for each day
-        const day = document.createElement('div');
-        day.textContent = i;
-
-        // If the day is today, add a special class
-        if (i === today.getDate() && month === today.getMonth() && year === today.getFullYear()) {
-            day.className = 'today';
+    function deleteEvent() {
+        if (window.confirm('Are you sure you want to delete this event?')) {
+            e.target.remove();
+            updateLocalStorage(dayKey, eventText);
         }
+        hideDialog();
+    }
 
-        // Load events from localStorage
-        const dayKey = `${year}-${month}-${i}`; // Create a unique key for each day
-        const savedEvents = JSON.parse(localStorage.getItem(dayKey) || '[]'); // Get saved events for the day
-        for (const event of savedEvents) {
-            createEvent(day, dayKey, event);
+    function cancelDialog() {
+        hideDialog();
+    }
+
+    function hideDialog() {
+        dialog.style.display = 'none';
+        [editButton, deleteButton, cancelButton].forEach((btn, i) => btn.removeEventListener('click', actions[i]));
+    }
+}
+
+function updateLocalStorage(dayKey, oldEvent, newEvent) {
+    const savedEvents = JSON.parse(localStorage.getItem(dayKey) || '[]');
+    const index = savedEvents.indexOf(oldEvent);
+    if (index !== -1) {
+        if (newEvent) {
+            savedEvents[index] = newEvent;
+        } else {
+            savedEvents.splice(index, 1);
         }
+        localStorage.setItem(dayKey, savedEvents.length ? JSON.stringify(savedEvents) : '');
+    }
+}
 
-        // Add an event listener to the day
-        day.addEventListener('click', function() {
-            // Open a prompt for the user to enter their event
-            const event = prompt('Enter your event:');
+function buildCalendar() {
+    const month = date.getMonth();
+    const year = date.getFullYear();
+    const today = new Date();
+    calendar.appendChild(createElement('div', `${monthNames[month]} ${year}`, 'month-year'));
+    dayNames.forEach(name => calendar.appendChild(createElement('div', name, 'day-name')));
+    const firstDay = new Date(year, month, 1).getDay();
+    const lastDay = new Date(year, month + 1, 0).getDate();
 
-            // If the user entered an event, add it to the day
-            if (event) {
-                createEvent(day, dayKey, event);
+    // Add empty slots for the days before the first day of the month
+    for (let i = 0; i < firstDay; i++) {
+        calendar.appendChild(createElement('div', '', 'empty-day'));
+    }
 
-                // Save the event to localStorage
-                const existingEvents = JSON.parse(localStorage.getItem(dayKey) || '[]'); // Get existing events for the day
-                existingEvents.push(event); // Add the new event to the array
-                localStorage.setItem(dayKey, JSON.stringify(existingEvents)); // Save the updated array back to localStorage
+    for (let i = 1; i <= lastDay; i++) {
+        const day = createElement('div', i, i === today.getDate() && month === today.getMonth() && year === today.getFullYear() ? 'today' : '');
+        const dayKey = `${year}-${month}-${i}`;
+        (JSON.parse(localStorage.getItem(dayKey) || '[]')).forEach(event => createEvent(day, dayKey, event));
+        day.addEventListener('click', (e) => {
+            if (e.target === day) {
+                const event = prompt('Enter your event:');
+                if (event) {
+                    createEvent(day, dayKey, event);
+                    const existingEvents = JSON.parse(localStorage.getItem(dayKey) || '[]');
+                    existingEvents.push(event);
+                    localStorage.setItem(dayKey, JSON.stringify(existingEvents));
+                }
             }
         });
-
         calendar.appendChild(day);
     }
 }
 
-// Build the initial calendar
+function createElement(type, textContent, className) {
+    const element = document.createElement(type);
+    element.textContent = textContent;
+    element.className = className;
+    return element;
+}
+
 buildCalendar();

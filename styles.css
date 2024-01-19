@@ -3,10 +3,46 @@ body {
     background-color: #f5f5f5;
 }
 
+@media (min-width: 600px) {
+    /* On screens that are 600px or wider, the calendar will take up 60% of the screen width */
+    #calendar {
+        width: 60%;
+    }
+}
+
+@media (min-width: 600px) {
+    /* On screens that are 600px or wider, the text will be larger */
+    #calendar div {
+        font-size: 1em;
+    }
+}
+
+#dialog {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: white;
+    padding: 20px;
+    border: 1px solid black;
+}
+
+#dialog #cancel-button {
+    /* place the button to the right of the other buttons (edit and cancel)*/
+    float: right;
+}
+
+#calendar-container {
+    position: relative;
+    display: inline-block;
+    width: 100%;
+}
+
 #calendar {
+    position: relative;
     display: flex;
     flex-wrap: wrap;
-    width: 100%; /* Make the calendar take up 90% of the screen width on small screens */
+    width: 50%;
     margin: auto;
     margin-top: 50px;
     border: 1px solid #ddd;
@@ -15,11 +51,9 @@ body {
     padding: 20px;
 }
 
-@media (min-width: 600px) {
-    /* On screens that are 600px or wider, the calendar will take up 60% of the screen width */
-    #calendar {
-        width: 60%;
-    }
+#calendar td, #calendar th {
+    /* ...other styles... */
+    height: 50px; /* Adjust this value to your desired height */
 }
 
 #calendar div {
@@ -31,15 +65,6 @@ body {
     color: #666;
     font-size: 0.8em; /* Make the text smaller on small screens */
 }
-
-@media (min-width: 600px) {
-    /* On screens that are 600px or wider, the text will be larger */
-    #calendar div {
-        font-size: 1em;
-    }
-}
-
-/* Rest of your CSS... */
 
 #calendar div:hover {
     background-color: #f5f5f5;
@@ -85,18 +110,35 @@ body {
 }
 
 #calendar-controls {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    width: 60%;
-    margin: auto;
-    padding: 20px 0;
+    position: relative;
+    top: 50%;
+    left: 0;
+    right: 0;
+}
+
+#prev-month {
+    position: absolute;
+    left: 250px; /* adjust as needed */
+}
+
+#next-month {
+    position: absolute;
+    right: 250px; /* adjust as needed */
+}
+
+#prev-month img, #next-month img {
+    width: 20px;
+    height: 20px;
+}
+
+#prev-month:hover img, #next-month:hover img {
+    opacity: 0.5;
 }
 
 #calendar-controls button {
     font-family: 'Roboto', sans-serif;
     border: none;
-    padding: 10px 20px;
+    padding:10px 20px;
     text-align: center;
     text-decoration: none;
     display: inline-block;
@@ -113,18 +155,4 @@ body {
     top: 0;
     width: 0;
     height: 0;
-}
-
-#prev-month:before {
-    left: -20px;
-    border-top: 20px solid transparent;
-    border-bottom: 20px solid transparent;
-    border-right: 20px solid #0078d7;
-}
-
-#next-month:before {
-    right: -20px;
-    border-top: 20px solid transparent;
-    border-bottom: 20px solid transparent;
-    border-left: 20px solid #0078d7;
 }

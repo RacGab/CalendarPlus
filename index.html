@@ -8,11 +8,21 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <div id="calendar-controls">
-        <button id="prev-month">Previous Month</button>
-        <button id="next-month">Next Month</button>
+    <div id="dialog" hidden>
+        <p>Do you want to edit or delete this event?</p>
+        <button id="edit-button">Edit</button>
+        <button id="delete-button">Delete</button>
+
+        <button id="cancel-button">Cancel</button>
     </div>
-    <div id="calendar"></div>
+
+    <div id="calendar-container">
+        <div id="calendar-controls">
+            <button id="prev-month"><img src="https://www.svgrepo.com/show/315101/caret-left.svg" alt="Previous month"></button>
+            <button id="next-month"><img src="https://www.svgrepo.com/show/315104/caret-right.svg" alt="Next month"></button>
+        </div>
+        <div id="calendar"></div>
+    </div>
     <script src="script.js"></script>
 </body>
 </html>
